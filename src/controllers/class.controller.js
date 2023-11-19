@@ -7,18 +7,15 @@ const Educator = db.educator;
 const Class = db.class;
 
 exports.getAllStudentByClassID = async (req, res) => {
-
     try {
         console.log(req.params.class_id);
         const _class = await Class.findOne({
             _id: req.params.class_id,
         })
-
         console.log(_class);
         if (!_class) {
             return res.status(404).send({ message: "Class Not found." });
         }
-
         return res.status(200).send(_class.student_ids);
     } catch (error) {
         return res.status(500).send({ message: error.message });
@@ -73,7 +70,7 @@ exports.createClass = async (req, res) => {
         const _class = new Class({
             topic,
             educator_ids: [user_id],
-            subject_ids: subject_ids,
+            subject_ids: subject_ids[0],
             keywords: keywords,
 
             grade: grade,
@@ -92,10 +89,11 @@ exports.createClass = async (req, res) => {
             documents: documents
         })
 
-        console.log(_class);
+        // console.log(_class);
         await _class.save();
         return res.status(200).send({ message: "class created successfully!" });
     } catch (error) {
+        console.log(error)
         return res.status(500).send({ message: error.message });
     }
 };
@@ -177,7 +175,7 @@ exports.getClassDetailsById = async (req, res) => {
     try {
         const { class_id } = req.params;
 
-        const _class = await Class.findById(class_id);
+        const _class = await Class.findById(class_id).populate("subject_Id");
 
         if (!_class) {
             return res.status(404).send({ message: "Class not found." });

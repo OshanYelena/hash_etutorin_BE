@@ -12,5 +12,5 @@ module.exports = function (app) {
   app.post("/api/educator/update-basic-details" , controller.updateEducatorBasicDetails);
   app.post("/api/educator/update-bank-details" , controller.updateEducatorBankDetails);
   app.post("/api/educator/update-additional-details" , controller.updateEducatorAdditionalDetails);
-
+  app.get('/api/courses', controller.getAllCoursesByEducatorId)
 };

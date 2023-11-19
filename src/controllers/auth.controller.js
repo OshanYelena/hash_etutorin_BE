@@ -11,56 +11,54 @@ const Student = db.student;
 const Educator = db.educator;
 
 exports.signup = async (req, res) => {
-
-  const session = await mongoose.startSession()
+  const session = await mongoose.startSession();
   try {
     console.log(req.body);
-
     const user = new User({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
       email: req.body.email,
       password: bcrypt.hashSync(req.body.password, 8),
       role: req.body.role,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
     });
-
+    // 6551f65caa39b9232fd8c0a0
     if (req.body.role === "student") {
       //transaction start
-      session.startTransaction()
-      const temp_user = await user.save({session});
+      session.startTransaction();
+      const temp_user = await user.save({ session });
       console.log(temp_user);
       const student = new Student({
         user_id: temp_user._id,
         //add other relevent fields
       });
-      await student.save({session});
+      await student.save({ session });
       //transaction end
-      await session.commitTransaction()
-      return res.status(200).send({ message: "Student was registered successfully!" });
-    }
-    else if (req.body.role === "educator") {
+      await session.commitTransaction();
+      return res
+        .status(200)
+        .send({ message: "Student was registered successfully!" });
+    } else if (req.body.role === "educator") {
       //transaction start
-      session.startTransaction()
-      const temp_user = await user.save({session});
+      session.startTransaction();
+      const temp_user = await user.save({ session });
       console.log(temp_user);
       const educator = new Educator({
         user_id: temp_user._id,
-        country: req.body.country
+        country: req.body.country,
       });
-      await educator.save({session});
+      await educator.save({ session });
       //transaction end
-      await session.commitTransaction()
-      return res.status(200).send({ message: "Educator was registered successfully!" });
-    }
-
-    else {
+      await session.commitTransaction();
+      return res
+        .status(200)
+        .send({ message: "Educator was registered successfully!" });
+    } else {
       return res.status(400).send({ message: "unknown role" });
     }
-
   } catch (error) {
-    await session.abortTransaction()
-    console.log(error.message)
-    res.status(500).send({"server erro":error.message});
+    await session.abortTransaction();
+    console.log(error);
+    res.status(500).send({ "server erro": error.message });
   }
 };
 
@@ -68,7 +66,7 @@ exports.signin = async (req, res) => {
   try {
     const user = await User.findOne({
       email: req.body.email,
-    })
+    });
 
     if (!user) {
       return res.status(404).send({ message: "User Not found." });
@@ -148,7 +146,7 @@ exports.forgotPassword = async (req, res) => {
       html: `<p>Please click the following link to reset your password: <a href="${resetPasswordLink}">${resetPasswordLink}</a></p>`,
     };
 
-    const sent_res=await sendEmail(mailOptions);
+    const sent_res = await sendEmail(mailOptions);
     console.log(sent_res);
 
     res

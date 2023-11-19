@@ -4,10 +4,10 @@ const {role_array} = require("../utils/enum");
 const User = mongoose.model("User", new mongoose.Schema({
 
   firstName: {
-    String,
+    type: String,
   },
   lastName: {
-    String,
+    type: String,
   },
   email: {
     type: String,

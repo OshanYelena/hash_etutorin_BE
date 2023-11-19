@@ -8,7 +8,7 @@ module.exports = function (app) {
   });
 
   //to do: add auth middleware to restrict access
-  app.get("/api/class/:class_id" , controller.getAllStudentByClassID);
+  app.get("/api/class/:class_id" , controller.getClassDetailsById);
   app.get("/api/class/get-all-student/:class_id" , controller.getAllStudentByClassID);
   app.post("/api/class/update-class-details" , controller.updateClassDetails);
   app.post("/api/class/create-class" , controller.createClass);
