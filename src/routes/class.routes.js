@@ -14,5 +14,8 @@ module.exports = function (app) {
   app.post("/api/class/create-class" , controller.createClass);
   app.post("/api/class/add-announcement" , controller.addAnnouncement);
   app.post("/api/class/add-resource" , controller.addResource);
+  app.post("/api/class/enroll", controller.enrollStudents)
+  app.get("/api/class-all", controller.getAllClasses)
+
 
 };

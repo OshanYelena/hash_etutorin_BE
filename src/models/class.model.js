@@ -1,107 +1,139 @@
-const { json } = require('body-parser');
-const mongoose = require('mongoose');
-const { grade_array } = require('../utils/enum');
-const { string } = require('joi');
-
+const { json } = require("body-parser");
+const mongoose = require("mongoose");
+const { grade_array } = require("../utils/enum");
+const { string } = require("joi");
 
 var announcement = new mongoose.Schema({
-    announcement: String,
-    // date_time: Date
-  });
+  announcement: String,
+  // date_time: Date
+});
 
-const Class = mongoose.model('Class', new mongoose.Schema({
-
+const Class = mongoose.model(
+  "Class",
+  new mongoose.Schema({
     grade: {
-        type: Number,
-        enum: grade_array,
-        // required: true
+      type: Number,
+      enum: grade_array,
+      // required: true
     },
-    subject_Id: [{
+    subject_Id: [
+      {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Subject',
+        ref: "Subject",
         // required: true
-    }],
+      },
+    ],
     topic: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     student_ids: [{
+        student_id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+        planType: {
+          type: String,
+          require: true,
+        },
+        classType: {
+          type: String,
+          require: true,
+        },
+        dateTime: {
+            type: Date,
+            require: true,
+          },
+      },
+    ],
+    educator_ids: [
+      {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    }],
-    educator_ids: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    }],
+        ref: "User",
+      },
+    ],
 
-    keywords: [{
+    keywords: [
+      {
         type: String,
         // required: true
-    }],
+      },
+    ],
     plan_type: {
-        type: String,
-        enum: ['one_time', 'weekly'],
-        // required: true
+      type: String,
+      enum: ["one_time", "weekly"],
+      // required: true
     },
     class_type: {
-        type: String,
-        enum: ['individual', 'small_group', 'group'],
-        // required: true
+      type: String,
+      enum: ["individual", "small_group", "group"],
+      // required: true
     },
     price: {
-        type: Number,
-        // required: true
+      type: Number,
+      // required: true
     },
     sub_description: {
-        type: String,
-        // required: true
+      type: String,
+      // required: true
     },
     date_time: {
-        type: Date,
-        // required: true
+      type: Date,
+      // required: true
     },
     description: {
-        type: String,
-        // required: true
+      type: String,
+      // required: true
     },
 
-    announcements: [{
+    announcements: [
+      {
         announcement: {
-            type: String,
-            required: true
+          type: String,
+          required: true,
         },
         date_time: {
-            type: Date,
-            default: Date.now
-        }
-    }],
-    resources: [{
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
+    resources: [
+      {
         topic: {
-            type: String,
-            // required: true
+          type: String,
+          // required: true
         },
         description: {
-            type: String,
-            // required: true
+          type: String,
+          // required: true
         },
         resource_link: {
-            type: String,
-            // required: true
+          type: String,
+          // required: true
         },
         date_time: {
-            type: Date,
-            default: Date.now
+          type: Date,
+          default: Date.now,
         },
-    }],
-    images: [{
-        type: String
-    }],
-    videos: [{
-        type: String
-    }],
-    documents: [{
-        type: String
-    }]
-}));
+      },
+    ],
+    images: [
+      {
+        type: String,
+      },
+    ],
+    videos: [
+      {
+        type: String,
+      },
+    ],
+    documents: [
+      {
+        type: String,
+      },
+    ],
+  })
+);
 
 module.exports = Class;

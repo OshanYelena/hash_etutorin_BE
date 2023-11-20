@@ -1,4 +1,5 @@
 const db = require("../models");
+const mongoose = require('mongoose');
 const User = db.user;
 const Student = db.student;
 const Class = db.class;
@@ -62,10 +63,15 @@ exports.getAllClassesByStudentId = async (req, res) => {
     try {
         const { user_id } = req.params;
 
-        const _classes = await Class
-        .find({ student_ids: { $in: [user_id] } })
-        .select("-student_ids -resources -announcements -description -keywords  -price -sub_description -images -videos -documents")
-        .populate('educator_ids', 'first_name last_name email')
+        const userIdObj = new mongoose.Types.ObjectId(user_id);
+
+        const _classes = await db.student.findOne({user_id: user_id}).populate('class_ids')
+
+
+        // const _classes = await Class
+        // .find({ student_ids: { $in: [userIdObj] } })
+        // .select("-student_ids -resources -announcements -description -keywords  -price -sub_description -images -videos -documents")
+        // .populate('educator_ids', 'first_name last_name email')
 
         if (!_classes) {
             return res.status(404).send({ message: "Classes not found." });
@@ -73,8 +79,9 @@ exports.getAllClassesByStudentId = async (req, res) => {
 
         console.log(_classes);
 
-        return res.status(200).send(_classes);
+        return res.status(200).json(_classes);
     } catch (error) {
+        console.log(error)
         return res.status(500).send({ message: error.message });
     }
 };
