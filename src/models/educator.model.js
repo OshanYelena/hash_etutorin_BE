@@ -10,11 +10,11 @@ const Educator = mongoose.model("Educator", new mongoose.Schema({
   },
   country: {
     type: String,
-    enum: country_array
+    // enum: country_array
   },
   grades:[ {
     type: String,
-    enum: grade_array
+    // enum: grade_array
   }],
   subject_ids: [{
     type: mongoose.Schema.Types.ObjectId,
