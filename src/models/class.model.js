@@ -11,6 +11,9 @@ var announcement = new mongoose.Schema({
 const Class = mongoose.model(
   "Class",
   new mongoose.Schema({
+    classNo: {
+      type: Number,
+    },
     grade: {
       type: Number,
       enum: grade_array,
@@ -27,7 +30,8 @@ const Class = mongoose.model(
       type: String,
       required: true,
     },
-    student_ids: [{
+    student_ids: [
+      {
         student_id: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "User",
@@ -41,9 +45,9 @@ const Class = mongoose.model(
           require: true,
         },
         dateTime: {
-            type: Date,
-            require: true,
-          },
+          type: Date,
+          require: true,
+        },
       },
     ],
     educator_ids: [

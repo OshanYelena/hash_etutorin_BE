@@ -67,8 +67,6 @@ exports.updateClassDetails = async (req, res) => {
 
 exports.createClass = async (req, res) => {
   try {
-    console.log(req.body);
-
     const {
       topic,
       user_id,
@@ -86,31 +84,53 @@ exports.createClass = async (req, res) => {
       documents,
     } = req.body;
 
-    const _class = new Class({
-      topic,
-      educator_ids: [user_id],
-      subject_ids: subject_ids[0],
-      keywords: keywords,
+    const count = await db.class.countDocuments();
+    console.log(subject_ids);
+    if (count) {
+      const _class = new Class({
+        classNo: count + 1,
+        topic,
+        educator_ids: [user_id],
+        subject_Id: [subject_ids],
+        keywords: keywords,
+        grade: parseInt(grade),
+        plan_type: plan_type,
+        class_type: class_type,
+        price: price,
+        sub_description: sub_description,
+        date_time: date_time,
 
-      grade: grade,
+        description: description,
+        images: images,
+        videos: videos,
+        documents: documents,
+      });
+      console.log(_class);
+      const saveClass = await _class.save();
+      return res.status(200).json({ classId: saveClass._id });
+    } else {
+      const _class = new Class({
+        classNo: 1,
+        topic,
+        educator_ids: [user_id],
+        subject_id: subject_ids,
+        keywords: keywords,
+        grade: parseInt(grade),
+        plan_type: plan_type,
+        class_type: class_type,
+        price: price,
+        sub_description: sub_description,
+        date_time: date_time,
 
-      plan_type: plan_type,
-      class_type: class_type,
-      price: price,
-      sub_description: sub_description,
-      date_time: date_time,
-
-      description: description,
-      //question_ids
-
-      images: images,
-      videos: videos,
-      documents: documents,
-    });
-
-    // console.log(_class);
-    const saveClass = await _class.save();
-    return res.status(200).json({ classId: saveClass._id });
+        description: description,
+        images: images,
+        videos: videos,
+        documents: documents,
+      });
+      console.log(_class);
+      const saveClass = await _class.save();
+      return res.status(200).json({ classId: saveClass._id });
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).send({ message: error.message });
@@ -190,7 +210,7 @@ exports.getClassDetailsById = async (req, res) => {
 
     const _class = await Class.findById(class_id)
       .populate("subject_Id")
-      .populate("educator_ids");
+      .populate("educator_ids")
 
     if (!_class) {
       return res.status(404).send({ message: "Class not found." });
@@ -323,7 +343,7 @@ exports.uploadS3 = async (req, res) => {
     if (uploadResults) {
       const excistClass = await db.class.findById(courseId);
       imageArra.map((upladedUrl) => {
-        excistClass.images.push(upladedUrl)
+        excistClass.images.push(upladedUrl);
       });
       await excistClass.save();
       return res.status(200).json({ status: true });
