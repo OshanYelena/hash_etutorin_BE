@@ -262,7 +262,7 @@ exports.enrollStudents = async (req, res) => {
 
 //search Api
 exports.getAllClasses = async (req, res) => {
-  const classes = await db.class.find().populate("educator_ids");
+  const classes = await db.class.find().populate("educator_ids").populate('subject_Id');
 
   return res.status(200).json({ classes: classes });
 };
