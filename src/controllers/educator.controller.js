@@ -12,7 +12,7 @@ exports.getEducatorById = async (req, res) => {
     console.log(req.params.user_id);
     const educator = await Educator.findOne({
       user_id: req.params.user_id,
-    }).populate("user_id");
+    }).populate("user_id").populate("subject_ids");
 
     console.log(educator);
     if (!educator) {
